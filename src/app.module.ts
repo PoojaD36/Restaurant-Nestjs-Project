@@ -13,6 +13,7 @@ import { OrdersModule } from './orders/orders.module';
 import { DatabaseModule } from './database/database.module';
 import { SearchModule } from './search/search.module';
 import { CartModule } from './cart/cart.module';
+import { NotificationsModule } from './notifications/notifications.module';
 
 @Module({
   imports: [
@@ -26,7 +27,8 @@ import { CartModule } from './cart/cart.module';
     OrdersModule,
     DatabaseModule,
     SearchModule,
-    CartModule
+    CartModule,
+    NotificationsModule,
   ],
   controllers: [AppController, TestController],
   providers: [AppService],
