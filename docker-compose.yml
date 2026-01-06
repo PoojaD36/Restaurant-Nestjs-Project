@@ -1,0 +1,23 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: restaurant_db
+    environment:
+      POSTGRES_DB: restaurant_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql
+
+  adminer:
+    image: adminer
+    container_name: adminer_ui
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+
+volumes:
+  pgdata:
