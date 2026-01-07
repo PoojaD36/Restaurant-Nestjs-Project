@@ -3,7 +3,7 @@ import {
   ForbiddenException,
   Injectable,
 } from '@nestjs/common';
-import { EntityManager } from '@mikro-orm/postgresql';
+import { EntityManager, SqlEntityManager } from '@mikro-orm/postgresql';
 
 import { Order } from './order.entity';
 import { OrderItem } from './order-item.entity';
@@ -18,7 +18,7 @@ import { NotificationsGateway } from 'src/notifications/notifications.gateway';
 @Injectable()
 export class OrdersService {
   constructor(
-    private readonly em: EntityManager,
+    private readonly em: SqlEntityManager,
     private readonly notifications: NotificationsGateway,
   ) {}
 

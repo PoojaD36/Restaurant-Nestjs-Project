@@ -1,6 +1,6 @@
 import { Migration } from '@mikro-orm/migrations';
 
-export class Migration20251230070223 extends Migration {
+export class Migration20260107105945 extends Migration {
 
   override async up(): Promise<void> {
     this.addSql(`create table "user" ("id" serial primary key, "name" varchar(255) not null, "email" varchar(255) not null, "password" varchar(255) not null, "role" text check ("role" in ('ADMIN', 'RESTAURANT', 'CUSTOMER', 'DELIVERY')) not null, "phone" varchar(255) null, "created_at" timestamptz not null);`);
@@ -14,6 +14,8 @@ export class Migration20251230070223 extends Migration {
 
     this.addSql(`create table "order_item" ("id" serial primary key, "order_id" int not null, "menu_item_id" int not null, "quantity" int not null, "price" int not null);`);
 
+    this.addSql(`create table "notification" ("id" serial primary key, "user_id" int not null, "type" varchar(255) not null, "data" jsonb not null, "is_read" boolean not null default false, "created_at" timestamptz not null);`);
+
     this.addSql(`alter table "restaurant" add constraint "restaurant_owner_id_foreign" foreign key ("owner_id") references "user" ("id") on update cascade;`);
 
     this.addSql(`alter table "menu_item" add constraint "menu_item_restaurant_id_foreign" foreign key ("restaurant_id") references "restaurant" ("id") on update cascade;`);
@@ -24,6 +26,8 @@ export class Migration20251230070223 extends Migration {
 
     this.addSql(`alter table "order_item" add constraint "order_item_order_id_foreign" foreign key ("order_id") references "order" ("id") on update cascade;`);
     this.addSql(`alter table "order_item" add constraint "order_item_menu_item_id_foreign" foreign key ("menu_item_id") references "menu_item" ("id") on update cascade;`);
+
+    this.addSql(`alter table "notification" add constraint "notification_user_id_foreign" foreign key ("user_id") references "user" ("id") on update cascade;`);
   }
 
 }
