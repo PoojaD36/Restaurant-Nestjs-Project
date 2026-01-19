@@ -209,4 +209,51 @@ export class OrdersService {
 
     return order;
   }
+
+  async getOrdersList(user: any, page = 1, limit = 10, status?: OrderStatus) {
+    const offset = (page - 1) * limit;
+
+    const where: any = {};
+
+    // Role-based filtering
+    if (user.role === UserRole.CUSTOMER) {
+      where.customer = user.userId;
+    }
+
+    if (user.role === UserRole.RESTAURANT) {
+      where.restaurant = {
+        owner: user.userId,
+      };
+    }
+
+    if (user.role === UserRole.DELIVERY) {
+      where.deliveryStaff = user.userId;
+    }
+
+    // Optional status filter
+    if (status) {
+      where.status = status;
+    }
+
+    const [orders, total] = await this.em.findAndCount(Order, where, {
+      populate: [
+        'items',
+        'items.menuItem',
+        'restaurant',
+        'customer',
+        'deliveryStaff',
+      ],
+      orderBy: { createdAt: 'DESC' },
+      limit,
+      offset,
+    });
+
+    return {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+      data: orders,
+    };
+  }
 }

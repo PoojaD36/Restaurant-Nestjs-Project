@@ -1,9 +1,11 @@
 import {
   Body,
   Controller,
+  Get,
   Param,
   Patch,
   Post,
+  Query,
   Req,
   UseGuards,
 } from '@nestjs/common';
@@ -16,6 +18,7 @@ import { Roles } from 'src/common/enums/decorators/roles.decorator';
 import { UserRole } from 'src/common/enums/user-role.enum';
 import { UpdateOrderStatusDto } from './dto/update-order-status.dto';
 import { AssignDeliveryDto } from './dto/assign-delivery.dto';
+import { OrderStatus } from 'src/common/enums/order-status.enum';
 
 @Controller('orders')
 @UseGuards(JwtAuthGuard, RolesGuard)
@@ -55,6 +58,21 @@ export class OrdersController {
       Number(id),
       dto.deliveryStaffId,
       req.user,
+    );
+  }
+
+  @Get()
+  async getOrdersList(
+    @Req() req: any,
+    @Query('page') page = 1,
+    @Query('limit') limit = 10,
+    @Query('status') status?: OrderStatus,
+  ) {
+    return this.ordersService.getOrdersList(
+      req.user,
+      Number(page),
+      Number(limit),
+      status,
     );
   }
 }
